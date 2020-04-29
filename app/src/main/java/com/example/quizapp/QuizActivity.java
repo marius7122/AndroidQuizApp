@@ -40,6 +40,7 @@ public class QuizActivity extends AppCompatActivity {
         setContentView(R.layout.activity_quiz);
 
         dbHelper = new DatabaseHelper(this);
+        // dbHelper.deleteDB();
 
         Fragment quizConfigFragment = new QuizConfigFragment();
 
@@ -53,13 +54,13 @@ public class QuizActivity extends AppCompatActivity {
     }
 
 
-    public void generateQuiz(String category, String difficulty)
+    public void generateQuiz(String category, String difficulty, String categoryName)
     {
         String url = "https://opentdb.com/api.php?amount=10&category=" + category +
                 "&difficulty=" + difficulty + "&type=multiple&encode=base64";
 
         Log.i("foo", "generating quiz: " + url);
-        this.category = category;
+        this.category = categoryName;
         this.difficulty = difficulty;
 
         new JsonTask().execute(url);

@@ -147,12 +147,12 @@ public class QuestionFragment extends Fragment {
     }
 
     private void logToDB() {
-        Score score = new Score();
-        score.category = category;
-        score.difficulty = difficulty;
-        score.score = score.toString();
+        Score s = new Score();
+        s.category = category;
+        s.difficulty = difficulty;
+        s.score = Integer.toString(score);
 
-        ((QuizActivity)getActivity()).dbHelper.addData(score);
+        ((QuizActivity)getActivity()).dbHelper.addData(s);
     }
 
 }

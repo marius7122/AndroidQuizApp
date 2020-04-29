@@ -1,6 +1,7 @@
 package com.example.quizapp;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -20,6 +21,7 @@ import java.util.HashMap;
 public class QuizConfigFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
     private Spinner categorySpinner, difficultySpinner;
+    SharedPreferences sharedPreferences;
 
     public QuizConfigFragment() {
         // Required empty public constructor
@@ -49,6 +51,21 @@ public class QuizConfigFragment extends Fragment implements AdapterView.OnItemSe
         difficultySpinner.setAdapter(difficultyAdapter);
         categorySpinner.setOnItemSelectedListener(this);
 
+
+        sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+
+        String savedCategory = sharedPreferences.getString("savedCategory", null);
+        if (savedCategory != null) {
+            int spinnerPosition = categoryAdapter.getPosition(savedCategory);
+            categorySpinner.setSelection(spinnerPosition);
+        }
+
+        String savedDifficulty = sharedPreferences.getString("savedDifficulty", null);
+        if (savedDifficulty != null) {
+            int spinnerPosition = difficultyAdapter.getPosition(savedDifficulty);
+            difficultySpinner.setSelection(spinnerPosition);
+        }
+
         // set button callback
         Button btnGenerateQuiz = view.findViewById(R.id.btnGenerateQuiz);
         btnGenerateQuiz.setOnClickListener(new View.OnClickListener() {
@@ -67,13 +84,19 @@ public class QuizConfigFragment extends Fragment implements AdapterView.OnItemSe
         String category = categorySpinner.getSelectedItem().toString();
         String difficulty = difficultySpinner.getSelectedItem().toString();
 
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("savedCategory", category);
+        editor.putString("savedDifficulty", difficulty);
+        editor.commit();
+
+
         HashMap<String, String> categoryToId = new HashMap<>();
         categoryToId.put("General Knowledge", "9");
         categoryToId.put("Video Games", "15");
         categoryToId.put("Computers", "18");
         categoryToId.put("Math", "19");
 
-        ((QuizActivity)getActivity()).generateQuiz(categoryToId.get(category), difficulty);
+        ((QuizActivity)getActivity()).generateQuiz(categoryToId.get(category), difficulty, category);
     }
 
     @Override
